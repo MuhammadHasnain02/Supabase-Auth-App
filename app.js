@@ -96,22 +96,35 @@ updtNewPassBtn.addEventListener("click" , async () => {
     }
     else {
         alert("Password updated successfully!")
+
+        // First sign out user
+        await supabase.auth.signOut();
+
+        // Hide update password section
         updtPasswSect.classList.add("hidden");
+        updtPasswSect.style.display = "none";
+
+        // Show only login page
         authPage.classList.remove("hidden");
+        authPage.style.display = "block";
+
+        newPage.classList.add("hidden");
+
+        newPassInp.value = "";
     }
 
 });
 
 // ----------<<< Auth State Change Listener >>>----------
 supabase.auth.onAuthStateChange( async (event, session) => {
+
     console.log("Auth Change:", event, session);
 
     // If user came from reset link, show update password section
     if (event === "PASSWORD_RECOVERY") {
-        authPage.classList.add("hidden");
-        newPage.classList.add("hidden");
-        updtPasswSect.classList.remove("hidden");
-        return;
+        authPage.style.display = "none";
+        newPage.style.display = "none";
+        updtPasswSect.style.display = "block";
     }
 
     if (session) {
